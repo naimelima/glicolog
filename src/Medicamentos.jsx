@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   collection, addDoc, onSnapshot,
-  orderBy, query, where, serverTimestamp,
+  query, where, serverTimestamp,
 } from 'firebase/firestore'
 import { db } from './firebase'
 
@@ -42,11 +42,13 @@ export default function Medicamentos({ usuario }) {
   useEffect(() => {
     const q = query(
       collection(db, 'medicamentos'),
-      where('userId', '==', usuario.uid),
-      orderBy('nome', 'asc')
+      where('userId', '==', usuario.uid)
     )
     return onSnapshot(q, (snap) => {
-      setMedicamentos(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      const dados = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => a.nome?.localeCompare(b.nome)) // ordena por nome em JS
+      setMedicamentos(dados)
       setCarregando(false)
     })
   }, [usuario.uid])
@@ -55,18 +57,21 @@ export default function Medicamentos({ usuario }) {
   useEffect(() => {
     const q = query(
       collection(db, 'registrosMedicamento'),
-      where('userId', '==', usuario.uid),
-      orderBy('dataHora', 'desc')
+      where('userId', '==', usuario.uid)
     )
     return onSnapshot(q, (snap) => {
-      setRegistros(snap.docs.map(d => {
-        const data = d.data()
-        return {
-          id: d.id,
-          ...data,
-          dataHoraFormatada: data.dataHora?.toDate().toLocaleString('pt-BR') ?? '...',
-        }
-      }))
+      const dados = snap.docs
+        .map(d => {
+          const data = d.data()
+          return {
+            id: d.id,
+            ...data,
+            dataHoraTs: data.dataHora?.toMillis() ?? 0,
+            dataHoraFormatada: data.dataHora?.toDate().toLocaleString('pt-BR') ?? '...',
+          }
+        })
+        .sort((a, b) => b.dataHoraTs - a.dataHoraTs) // mais recente primeiro
+      setRegistros(dados)
     })
   }, [usuario.uid])
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   collection, addDoc, onSnapshot,
-  orderBy, query, where, serverTimestamp,
+  query, where, serverTimestamp,
 } from 'firebase/firestore'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { db, auth } from './firebase'
@@ -46,26 +46,27 @@ export default function App() {
     }
 
     setCarregando(true)
-    // where garante que cada usuário veja apenas seus próprios registros
     const q = query(
       collection(db, 'medicoes'),
-      where('userId', '==', usuario.uid),
-      orderBy('dataHora', 'desc')
+      where('userId', '==', usuario.uid)
     )
 
     const cancelarEscuta = onSnapshot(q, (snapshot) => {
-      const dados = snapshot.docs.map((doc) => {
-        const data = doc.data()
-        return {
-          id: doc.id,
-          valor: data.valor,
-          contexto: data.contexto,
-          observacao: data.observacao,
-          dataHoraFormatada: data.dataHora
-            ? data.dataHora.toDate().toLocaleString('pt-BR')
-            : '...',
-        }
-      })
+      const dados = snapshot.docs
+        .map((doc) => {
+          const data = doc.data()
+          return {
+            id: doc.id,
+            valor: data.valor,
+            contexto: data.contexto,
+            observacao: data.observacao,
+            dataHoraTs: data.dataHora?.toMillis() ?? 0,
+            dataHoraFormatada: data.dataHora
+              ? data.dataHora.toDate().toLocaleString('pt-BR')
+              : '...',
+          }
+        })
+        .sort((a, b) => b.dataHoraTs - a.dataHoraTs) // mais recente primeiro
       setMedicoes(dados)
       setCarregando(false)
     })
