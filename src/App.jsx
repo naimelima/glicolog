@@ -11,6 +11,7 @@ import GraficoGlicemia from './GraficoGlicemia'
 import Medicamentos from './Medicamentos'
 import Lembretes from './Lembretes'
 import { useNotificacoes } from './useNotificacoes'
+import BotaoExportarPDF from './ExportarPDF'
 import './App.css'
 
 export default function App() {
@@ -244,7 +245,10 @@ export default function App() {
 
         {/* Histórico */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Histórico</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">Histórico</h2>
+            <BotaoExportarPDF medicoes={medicoes} usuarioEmail={usuario.email} />
+          </div>
 
           {carregando ? (
             <p className="text-gray-400 text-sm text-center py-6">Carregando...</p>
