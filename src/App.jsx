@@ -41,11 +41,14 @@ export default function App() {
 
   // Carrega as medições do Firestore — só quando o usuário estiver logado
   useEffect(() => {
+    console.log('[GlicoLog] usuario mudou:', usuario ? usuario.uid : 'não logado')
     if (!usuario) {
       setMedicoes([])
+      setCarregando(false)
       return
     }
 
+    console.log('[GlicoLog] iniciando query Firestore...')
     setCarregando(true)
     const q = query(
       collection(db, 'medicoes'),
@@ -55,6 +58,7 @@ export default function App() {
     const cancelarEscuta = onSnapshot(
       q,
       (snapshot) => {
+        console.log('[GlicoLog] Firestore ok, documentos:', snapshot.size)
         const dados = snapshot.docs
           .map((doc) => {
             const data = doc.data()
