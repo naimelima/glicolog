@@ -25,6 +25,7 @@ export default function App() {
   // --- Estado da tela principal ---
   const [medicoes, setMedicoes]       = useState([])
   const [carregando, setCarregando]   = useState(true)
+  const [erroFirestore, setErroFirestore] = useState(null)
   const [salvando, setSalvando]       = useState(false)
   const [valor, setValor]             = useState('')
   const [contexto, setContexto]       = useState('jejum')
@@ -51,28 +52,37 @@ export default function App() {
       where('userId', '==', usuario.uid)
     )
 
-    const cancelarEscuta = onSnapshot(q, (snapshot) => {
-      const dados = snapshot.docs
-        .map((doc) => {
-          const data = doc.data()
-          return {
-            id: doc.id,
-            valor: data.valor,
-            contexto: data.contexto,
-            observacao: data.observacao,
-            dataHoraTs: data.dataHora?.toMillis() ?? 0,
-            dataHoraFormatada: data.dataHora
-              ? data.dataHora.toDate().toLocaleString('pt-BR')
-              : '...',
-          }
-        })
-        .sort((a, b) => b.dataHoraTs - a.dataHoraTs) // mais recente primeiro
-      setMedicoes(dados)
-      setCarregando(false)
-    })
+    const cancelarEscuta = onSnapshot(
+      q,
+      (snapshot) => {
+        const dados = snapshot.docs
+          .map((doc) => {
+            const data = doc.data()
+            return {
+              id: doc.id,
+              valor: data.valor,
+              contexto: data.contexto,
+              observacao: data.observacao,
+              dataHoraTs: data.dataHora?.toMillis() ?? 0,
+              dataHoraFormatada: data.dataHora
+                ? data.dataHora.toDate().toLocaleString('pt-BR')
+                : '...',
+            }
+          })
+          .sort((a, b) => b.dataHoraTs - a.dataHoraTs)
+        setMedicoes(dados)
+        setCarregando(false)
+        setErroFirestore(null)
+      },
+      (erro) => {
+        console.error('Firestore erro:', erro.code, erro.message)
+        setErroFirestore(erro.code + ': ' + erro.message)
+        setCarregando(false)
+      }
+    )
 
     return () => cancelarEscuta()
-  }, [usuario]) // re-executa sempre que o usuário mudar (login/logout)
+  }, [usuario])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -251,7 +261,9 @@ export default function App() {
             <BotaoExportarPDF medicoes={medicoes} usuarioEmail={usuario.email} />
           </div>
 
-          {carregando ? (
+          {erroFirestore ? (
+            <p className="text-red-500 text-xs text-center py-6 break-all">{erroFirestore}</p>
+          ) : carregando ? (
             <p className="text-gray-400 text-sm text-center py-6">Carregando...</p>
           ) : medicoes.length === 0 ? (
             <p className="text-gray-400 text-sm text-center py-6">
