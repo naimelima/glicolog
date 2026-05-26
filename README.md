@@ -1,16 +1,50 @@
-# React + Vite
+GlicoLog 🩸📊
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web desenvolvida para auxiliar pessoas com diabetes no acompanhamento diário da glicemia, medicamentos e rotina de cuidados.
 
-Currently, two official plugins are available:
+🚀 Sobre o projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O GlicoLog foi criado com o objetivo de oferecer uma forma simples, prática e acessível para registrar medições de glicemia e acompanhar a evolução da saúde ao longo do tempo.
 
-## React Compiler
+A aplicação permite que usuários acompanhem seu histórico glicêmico, registrem medicamentos e criem lembretes para medições e cuidados diários.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🔗 Deploy da aplicação:
+https://glicolog.vercel.app
 
-## Expanding the ESLint configuration
+✨ Funcionalidades
+✅ Cadastro e login de usuários
+✅ Registro de medições de glicemia
+✅ Histórico completo das medições
+✅ Visualização da evolução glicêmica
+✅ Cadastro de medicamentos
+✅ Criação de lembretes
+✅ Interface responsiva
+✅ Armazenamento em nuvem com Firebase
+🛠️ Tecnologias utilizadas
+Front-end
+Next.js
+TypeScript
+Tailwind CSS
+Back-end / Serviços
+Firebase Authentication
+Cloud Firestore
+Deploy
+Vercel
+Ferramentas
+Claude Code
+Git & GitHub
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+📚 Aprendizados
+
+Durante o desenvolvimento deste projeto, aprofundei conhecimentos em:
+
+Autenticação com Firebase
+Estruturação de aplicações Next.js
+Gerenciamento de estado
+Integração com banco de dados em tempo real
+Deploy de aplicações web
+Organização e componentização de interfaces
+Desenvolvimento assistido com IA utilizando Claude Code
+💡 Objetivo
+
+Além do aprendizado técnico, o objetivo do GlicoLog é mostrar como a tecnologia pode contribuir diretamente para melhorar a rotina e o cuidado com a saúde das pessoas.
